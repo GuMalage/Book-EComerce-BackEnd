@@ -1,6 +1,5 @@
 package br.edu.utfpr.pb.pw44s.server.dto.response;
 
-import br.edu.utfpr.pb.pw44s.server.dto.OrderDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

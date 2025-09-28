@@ -14,11 +14,6 @@ public abstract class CrudServiceReadImpl<T, ID extends Serializable> implements
     protected abstract JpaRepository<T, ID> getRepository();
 
     @Override
-    public T findById(ID id) {
-        return getRepository().findById(id).orElse(null);
-    }
-
-    @Override
     public boolean exists(ID id) {
         return getRepository().existsById(id);
     }
@@ -33,12 +28,7 @@ public abstract class CrudServiceReadImpl<T, ID extends Serializable> implements
     public List<T> findAll() {
         return getRepository().findAll();
     }
-
-    @Override
-    public List<T> findAll(Sort sort) {
-        return getRepository().findAll(sort);
-    }
-
+    
     @Override
     public Page<T> findAll(Pageable pageable) {
         return getRepository().findAll(pageable);

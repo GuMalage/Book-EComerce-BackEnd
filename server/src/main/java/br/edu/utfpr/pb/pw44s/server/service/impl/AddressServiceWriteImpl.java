@@ -5,10 +5,8 @@ import br.edu.utfpr.pb.pw44s.server.repository.AddressRepository;
 import br.edu.utfpr.pb.pw44s.server.service.AuthService;
 import br.edu.utfpr.pb.pw44s.server.service.IAddressServiceWrite;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 
 @Service
 public class AddressServiceWriteImpl extends CrudServiceWriteImpl<Address, Long> implements IAddressServiceWrite {

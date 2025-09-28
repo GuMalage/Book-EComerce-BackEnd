@@ -42,7 +42,6 @@ public class OrderItemServiceWriteImpl extends CrudServiceWriteImpl<OrderItem, L
         OrderItem item;
 
         if (orderItemDTO.getId() != null) {
-            // Atualizar item existente
             item = orderItemRepository.findById(orderItemDTO.getId())
                     .orElseThrow(() -> new RuntimeException("OrderItem não encontrado: " + orderItemDTO.getId()));
 
@@ -51,7 +50,6 @@ public class OrderItemServiceWriteImpl extends CrudServiceWriteImpl<OrderItem, L
             item.setProduct(product);
             item.setOrder(order);
         } else {
-            // Criar novo item
             item = new OrderItem();
             item.setOrder(order);
             item.setProduct(product);
@@ -69,7 +67,5 @@ public class OrderItemServiceWriteImpl extends CrudServiceWriteImpl<OrderItem, L
 
         return modelMapper.map(savedItem, OrderItemResponseDTO.class);
     }
-
-
 
 }

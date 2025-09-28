@@ -1,7 +1,5 @@
 package br.edu.utfpr.pb.pw44s.server.controller;
 
-import br.edu.utfpr.pb.pw44s.server.dto.OrderItemDTO;
-import br.edu.utfpr.pb.pw44s.server.dto.response.OrderItemResponseDTO;
 import br.edu.utfpr.pb.pw44s.server.service.ICrudServiceRead;
 import br.edu.utfpr.pb.pw44s.server.service.ICrudServiceWrite;
 import jakarta.validation.Valid;

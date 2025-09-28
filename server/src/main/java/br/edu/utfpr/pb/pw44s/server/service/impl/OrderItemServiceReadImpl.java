@@ -1,6 +1,5 @@
 package br.edu.utfpr.pb.pw44s.server.service.impl;
 
-import br.edu.utfpr.pb.pw44s.server.dto.OrderItemDTO;
 import br.edu.utfpr.pb.pw44s.server.dto.response.OrderItemResponseDTO;
 import br.edu.utfpr.pb.pw44s.server.model.Order;
 import br.edu.utfpr.pb.pw44s.server.model.OrderItem;

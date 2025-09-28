@@ -9,7 +9,6 @@ import br.edu.utfpr.pb.pw44s.server.repository.OrderItemRepository;
 import br.edu.utfpr.pb.pw44s.server.repository.OrderRepository;
 import br.edu.utfpr.pb.pw44s.server.service.AuthService;
 import br.edu.utfpr.pb.pw44s.server.service.IOrderServiceWrite;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.stereotype.Service;
@@ -24,15 +23,13 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
     private final OrderItemRepository orderItemRepository;
     private final ProductServiceReadImpl productServiceRead;
     private final AuthService authService;
-    private final ModelMapper modelMapper;
     private BigDecimal totalOrderPrice=BigDecimal.ZERO;
 
-    public OrderServiceWriteImpl(OrderRepository orderRepository, OrderItemRepository orderItemRepository, AuthService authService, ProductServiceReadImpl productServiceRead, ModelMapper modelMapper) {
+    public OrderServiceWriteImpl(OrderRepository orderRepository, OrderItemRepository orderItemRepository, AuthService authService, ProductServiceReadImpl productServiceRead) {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.productServiceRead = productServiceRead;
         this.authService = authService;
-        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -45,11 +42,9 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
     public OrderDTO SaveCompleteOrder(OrderDTO entity) {
         Order order;
         if (entity.getId() != null) {
-            // Atualiza pedido existente
             order = orderRepository.findById(entity.getId())
                     .orElseThrow(() -> new RuntimeException("Pedido não encontrado: " + entity.getId()));
         } else {
-            // Cria novo pedido
             order = new Order();
             order.setDateOrder(LocalDateTime.now());
             order.setUser(authService.getAuthenticatedUser());
@@ -61,7 +56,6 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
         for (OrderItemDTO dtoItem : entity.getItemsList()) {
             Product product = productServiceRead.findOne(dtoItem.getProductId());
 
-            // Verifica se item já existe no pedido
             OrderItem item = orderItemRepository.findByOrderIdAndProductId(order.getId(), product.getId())
                     .orElse(new OrderItem());
 
@@ -75,11 +69,11 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
 
             totalOrderPrice = totalOrderPrice.add(itemTotal);
 
-            orderItemRepository.save(item); // salva ou atualiza o item
+            orderItemRepository.save(item);
         }
 
         order.setTotalPrice(totalOrderPrice);
-        orderRepository.save(order); // salva total atualizado
+        orderRepository.save(order);
 
         entity.setId(order.getId());
         return entity;
@@ -91,7 +85,6 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
         Order order = orderRepository.findById(entity.getId())
                 .orElseThrow(() -> new RuntimeException("Order não encontrado: " + entity.getId()));
 
-        // Busca os itens do pedido diretamente no banco
         List<OrderItem> items = orderItemRepository.findByOrder_Id(order.getId());
 
         BigDecimal totalOrderPrice = BigDecimal.ZERO;
@@ -105,9 +98,5 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
         order.setTotalPrice(totalOrderPrice);
         orderRepository.save(order);
     }
-
-
-
-
 
 }

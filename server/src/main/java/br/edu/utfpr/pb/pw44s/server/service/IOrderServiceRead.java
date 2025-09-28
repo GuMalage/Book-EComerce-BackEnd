@@ -1,6 +1,5 @@
 package br.edu.utfpr.pb.pw44s.server.service;
 
-import br.edu.utfpr.pb.pw44s.server.dto.OrderDTO;
 import br.edu.utfpr.pb.pw44s.server.dto.response.OrderResponseDTO;
 import br.edu.utfpr.pb.pw44s.server.model.Order;
 import org.springframework.http.ResponseEntity;

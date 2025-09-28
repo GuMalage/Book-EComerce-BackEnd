@@ -10,11 +10,7 @@ import java.util.List;
 public interface ICrudServiceRead <T, ID extends Serializable> {
     List<T> findAll();
 
-    List<T> findAll(Sort sort);
-
     Page<T> findAll(Pageable pageable);
-
-    T findById(ID id);
 
     boolean exists(ID id);
 

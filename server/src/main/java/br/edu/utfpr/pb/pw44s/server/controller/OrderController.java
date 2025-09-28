@@ -1,7 +1,6 @@
 package br.edu.utfpr.pb.pw44s.server.controller;
 
 import br.edu.utfpr.pb.pw44s.server.dto.OrderDTO;
-import br.edu.utfpr.pb.pw44s.server.dto.response.OrderItemResponseDTO;
 import br.edu.utfpr.pb.pw44s.server.dto.response.OrderResponseDTO;
 import br.edu.utfpr.pb.pw44s.server.model.Order;
 import br.edu.utfpr.pb.pw44s.server.service.ICrudServiceRead;

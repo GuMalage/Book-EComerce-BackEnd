@@ -1,6 +1,5 @@
 package br.edu.utfpr.pb.pw44s.server.dto;
 
-import br.edu.utfpr.pb.pw44s.server.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
