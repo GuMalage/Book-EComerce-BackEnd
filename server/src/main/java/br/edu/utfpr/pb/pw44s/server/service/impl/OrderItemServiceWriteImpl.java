@@ -63,7 +63,7 @@ public class OrderItemServiceWriteImpl extends CrudServiceWriteImpl<OrderItem, L
 
         OrderItem savedItem = orderItemRepository.save(item);
 
-        orderServiceWrite.UpdateOrder(modelMapper.map(order, OrderDTO.class));
+        orderServiceWrite.updateOrder(modelMapper.map(order, OrderDTO.class));
 
         return modelMapper.map(savedItem, OrderItemResponseDTO.class);
     }

@@ -51,7 +51,7 @@ public class OrderController extends CrudController<Order, OrderDTO, OrderRespon
 
     @Override
     public ResponseEntity<OrderResponseDTO> create(OrderDTO entity) {
-        OrderDTO savedOrderDTO = orderServiceWrite.SaveCompleteOrder(entity);
+        OrderDTO savedOrderDTO = orderServiceWrite.saveCompleteOrder(entity);
         OrderResponseDTO responseOrderResponseDTO = modelMapper.map(savedOrderDTO, OrderResponseDTO.class);
 
         return ResponseEntity.ok(responseOrderResponseDTO);

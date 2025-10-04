@@ -28,7 +28,7 @@ public abstract class CrudServiceReadImpl<T, ID extends Serializable> implements
     public List<T> findAll() {
         return getRepository().findAll();
     }
-    
+
     @Override
     public Page<T> findAll(Pageable pageable) {
         return getRepository().findAll(pageable);

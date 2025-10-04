@@ -39,7 +39,7 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
 
 
     @Override
-    public OrderDTO SaveCompleteOrder(OrderDTO entity) {
+    public OrderDTO saveCompleteOrder(OrderDTO entity) {
         Order order;
         if (entity.getId() != null) {
             order = orderRepository.findById(entity.getId())
@@ -81,7 +81,7 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
 
 
     @Override
-    public void UpdateOrder(OrderDTO entity) {
+    public void updateOrder(OrderDTO entity) {
         Order order = orderRepository.findById(entity.getId())
                 .orElseThrow(() -> new RuntimeException("Order não encontrado: " + entity.getId()));
 
