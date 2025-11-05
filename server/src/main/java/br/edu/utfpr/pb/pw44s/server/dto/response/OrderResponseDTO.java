@@ -19,4 +19,7 @@ public class OrderResponseDTO {
     private UserDTO user;
     private List<OrderItemResponseDTO> itemsList = new ArrayList<>();
     private BigDecimal totalPrice;
+    private String paymentType;
+    private String shippingType;
+    private Long addressId;
 }

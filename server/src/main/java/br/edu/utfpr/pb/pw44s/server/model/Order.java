@@ -26,4 +26,11 @@ public class Order {
     @ManyToOne
     private User user;
 
+    private String paymentType;
+
+    private String shippingType;
+
+    @ManyToOne
+    private Address address;
+
 }

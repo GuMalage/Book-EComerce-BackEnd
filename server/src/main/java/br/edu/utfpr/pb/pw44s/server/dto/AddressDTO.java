@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddressDTO {
-    private String logradouro;
+    private String street;
     private String complement;
-    private String cep;
     private UserDTO user;
+    private String city;
+    private String state;
+    private String houseNumber;
 }

@@ -21,10 +21,14 @@ public class Address {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private String logradouro;
+    private String street;
 
     private String complement;
 
-    @NotNull
-    private String cep;
+    private String city;
+
+    private String state;
+
+    private String houseNumber;
+
 }
