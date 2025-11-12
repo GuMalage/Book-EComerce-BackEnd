@@ -30,6 +30,8 @@ public class Order {
 
     private String shippingType;
 
+    private BigDecimal shipping;
+
     @ManyToOne
     private Address address;
 

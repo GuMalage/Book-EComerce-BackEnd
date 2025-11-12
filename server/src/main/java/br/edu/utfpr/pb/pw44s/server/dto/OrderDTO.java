@@ -13,10 +13,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderDTO {
+    private Long id;
     private Long userId;
     private List<OrderItemDTO> itemsList;
     private BigDecimal totalPrice;
     private String paymentType;
     private String shippingType;
     private Long addressId;
+    private BigDecimal shipping;
 }

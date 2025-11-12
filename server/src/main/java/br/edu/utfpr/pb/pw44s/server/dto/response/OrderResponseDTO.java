@@ -22,4 +22,5 @@ public class OrderResponseDTO {
     private String paymentType;
     private String shippingType;
     private Long addressId;
+    private BigDecimal shipping;
 }
