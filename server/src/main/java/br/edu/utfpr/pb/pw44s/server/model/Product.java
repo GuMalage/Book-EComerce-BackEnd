@@ -25,9 +25,16 @@ public class Product {
 
     private BigDecimal price;
 
+    @Column(name = "url_image", length = 4000)
     private String urlImage;
 
-    @ManyToOne
-    private Category category;
+    @Column(name = "long_description", length = 4000)
+    private String longDescription;
 
+    @Column(name = "autor_name")
+    private String autorName;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 }

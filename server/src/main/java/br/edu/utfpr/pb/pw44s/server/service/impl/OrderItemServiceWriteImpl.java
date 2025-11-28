@@ -48,12 +48,14 @@ public class OrderItemServiceWriteImpl extends CrudServiceWriteImpl<OrderItem, L
             item.setQuantity(orderItemDTO.getQuantity());
             item.setUnitPrice(product.getPrice());
             item.setProduct(product);
+            item.setUrlImage(product.getUrlImage());
             item.setOrder(order);
         } else {
             item = new OrderItem();
             item.setOrder(order);
             item.setProduct(product);
             item.setUnitPrice(product.getPrice());
+            item.setUrlImage(product.getUrlImage());
             item.setQuantity(orderItemDTO.getQuantity());
         }
 

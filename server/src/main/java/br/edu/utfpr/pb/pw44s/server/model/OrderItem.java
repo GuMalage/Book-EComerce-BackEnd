@@ -29,4 +29,7 @@ public class OrderItem {
 
     @ManyToOne
     private Product product;
+
+    @Column(length = 4000)
+    private String urlImage;
 }

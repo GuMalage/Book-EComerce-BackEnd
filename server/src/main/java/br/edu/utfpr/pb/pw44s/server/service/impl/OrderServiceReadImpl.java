@@ -56,6 +56,7 @@ public class OrderServiceReadImpl extends CrudServiceReadImpl<Order, Long> imple
                                 itemDTO.setProductId(item.getProduct().getId());
                                 itemDTO.setProductPrice(item.getUnitPrice());
                                 itemDTO.setTotalPriceItems(item.getTotalPriceItems());
+                                itemDTO.setUrlImage(item.getUrlImage());
                                 return itemDTO;
                             })
                             .collect(Collectors.toList());

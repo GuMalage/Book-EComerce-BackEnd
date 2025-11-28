@@ -48,6 +48,9 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
             order = new Order();
             order.setDateOrder(LocalDateTime.now());
             order.setUser(authService.getAuthenticatedUser());
+            order.setShippingType(entity.getShippingType());
+            order.setPaymentType(entity.getPaymentType());
+            order.setAddressId(entity.getAddressId());
             order = orderRepository.save(order); // salva para gerar ID
         }
 

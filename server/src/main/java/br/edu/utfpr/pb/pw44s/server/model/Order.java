@@ -32,7 +32,6 @@ public class Order {
 
     private BigDecimal shipping;
 
-    @ManyToOne
-    private Address address;
+    private Long addressId;
 
 }

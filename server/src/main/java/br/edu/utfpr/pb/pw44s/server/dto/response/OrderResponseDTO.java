@@ -23,4 +23,5 @@ public class OrderResponseDTO {
     private String shippingType;
     private Long addressId;
     private BigDecimal shipping;
+    private String urlImage;
 }
