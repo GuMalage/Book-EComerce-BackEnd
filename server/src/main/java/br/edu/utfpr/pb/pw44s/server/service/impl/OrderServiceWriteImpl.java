@@ -66,6 +66,7 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
             item.setProduct(product);
             item.setUnitPrice(product.getPrice());
             item.setQuantity(dtoItem.getQuantity());
+            item.setUrlImage(product.getUrlImage());
 
             BigDecimal itemTotal = product.getPrice().multiply(BigDecimal.valueOf(dtoItem.getQuantity()));
             item.setTotalPriceItems(itemTotal);
