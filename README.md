@@ -75,20 +75,6 @@ http://localhost:8080
 
 ---
 
-## 📂 Estrutura do Projeto
-
-```
-src/
- ├── controller/
- ├── service/
- ├── repository/
- ├── model/
- └── config/
-pom.xml
-```
-
----
-
 ## 🎯 Objetivo
 
 Fornecer uma API REST robusta para um sistema de E-Commerce, aplicando boas práticas de desenvolvimento back-end e arquitetura em camadas.
