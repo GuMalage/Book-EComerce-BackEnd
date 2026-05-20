@@ -59,6 +59,15 @@ public class WebSecurity {
 
         // configura a authorização das requisições
         http.authorizeHttpRequests((authorize) -> authorize
+                .requestMatchers(
+                        "/v3/api-docs/**",
+                        "/v3/api-docs.yml**",
+                        "/api-docs**",
+                        "/swagger-ui/index.html**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/webjars/**"
+                ).permitAll()
                 //permite que a rota "/users" seja acessada, mesmo sem o usuário estar autenticado desde que o método HTTP da requisição seja POST
                 .requestMatchers(HttpMethod.POST, "/users/**").permitAll()
                 //permite que a rota "/error" seja acessada por qualquer requisição mesmo o usuário não estando autenticado

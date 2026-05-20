@@ -34,6 +34,9 @@ public class User implements UserDetails {
     @Size(min = 6)
     private String password;
 
+    @NotNull
+    private String email;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return AuthorityUtils.createAuthorityList("ROLE_USER");

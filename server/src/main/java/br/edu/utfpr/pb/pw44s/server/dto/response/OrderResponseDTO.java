@@ -1,6 +1,7 @@
 package br.edu.utfpr.pb.pw44s.server.dto.response;
 
 import br.edu.utfpr.pb.pw44s.server.dto.UserDTO;
+import br.edu.utfpr.pb.pw44s.server.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,4 +25,5 @@ public class OrderResponseDTO {
     private Long addressId;
     private BigDecimal shipping;
     private String urlImage;
+    private OrderStatus orderStatus;
 }

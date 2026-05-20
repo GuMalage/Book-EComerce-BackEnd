@@ -2,13 +2,16 @@ package br.edu.utfpr.pb.pw44s.server.service.impl;
 
 import br.edu.utfpr.pb.pw44s.server.dto.OrderDTO;
 import br.edu.utfpr.pb.pw44s.server.dto.OrderItemDTO;
+import br.edu.utfpr.pb.pw44s.server.enums.OrderStatus;
 import br.edu.utfpr.pb.pw44s.server.model.Order;
 import br.edu.utfpr.pb.pw44s.server.model.OrderItem;
 import br.edu.utfpr.pb.pw44s.server.model.Product;
 import br.edu.utfpr.pb.pw44s.server.repository.OrderItemRepository;
 import br.edu.utfpr.pb.pw44s.server.repository.OrderRepository;
 import br.edu.utfpr.pb.pw44s.server.service.AuthService;
+import br.edu.utfpr.pb.pw44s.server.service.EmailService;
 import br.edu.utfpr.pb.pw44s.server.service.IOrderServiceWrite;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.stereotype.Service;
@@ -23,13 +26,16 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
     private final OrderItemRepository orderItemRepository;
     private final ProductServiceReadImpl productServiceRead;
     private final AuthService authService;
+    @Autowired
+    private EmailService emailService;
     private BigDecimal totalOrderPrice=BigDecimal.ZERO;
 
-    public OrderServiceWriteImpl(OrderRepository orderRepository, OrderItemRepository orderItemRepository, AuthService authService, ProductServiceReadImpl productServiceRead) {
+    public OrderServiceWriteImpl(OrderRepository orderRepository, OrderItemRepository orderItemRepository, AuthService authService, ProductServiceReadImpl productServiceRead, EmailService emailService) {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.productServiceRead = productServiceRead;
         this.authService = authService;
+        this.emailService = emailService;
     }
 
     @Override
@@ -77,6 +83,7 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
         }
 
         order.setTotalPrice(totalOrderPrice);
+        order.setOrderStatus(OrderStatus.PROCESSING);
         orderRepository.save(order);
 
         entity.setId(order.getId());
@@ -86,21 +93,43 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
 
     @Override
     public void updateOrder(OrderDTO entity) {
-        Order order = orderRepository.findById(entity.getId())
-                .orElseThrow(() -> new RuntimeException("Order não encontrado: " + entity.getId()));
 
-        List<OrderItem> items = orderItemRepository.findByOrder_Id(order.getId());
+        Order order = orderRepository.findById(entity.getId())
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Order não encontrado: " + entity.getId()
+                        )
+                );
+
+        if (entity.getOrderStatus() != null) {
+            order.setOrderStatus(entity.getOrderStatus());
+        }
+
+        List<OrderItem> items =
+                orderItemRepository.findByOrder_Id(order.getId());
 
         BigDecimal totalOrderPrice = BigDecimal.ZERO;
 
         for (OrderItem item : items) {
+
             totalOrderPrice = totalOrderPrice.add(
-                    item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()))
+                    item.getUnitPrice()
+                            .multiply(BigDecimal.valueOf(item.getQuantity()))
             );
         }
 
         order.setTotalPrice(totalOrderPrice);
+
+
         orderRepository.save(order);
+
+        System.out.println(order.getUser().getUsername());
+        emailService.sendOrderStatusEmail(
+                order.getUser().getEmail(),
+                order.getUser().getUsername(),
+                order.getOrderStatus().name(),
+                order.getUser().getEmail()
+        );
     }
 
 }

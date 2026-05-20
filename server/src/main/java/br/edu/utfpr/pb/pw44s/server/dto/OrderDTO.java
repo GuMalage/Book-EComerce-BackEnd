@@ -1,5 +1,6 @@
 package br.edu.utfpr.pb.pw44s.server.dto;
 
+import br.edu.utfpr.pb.pw44s.server.enums.OrderStatus;
 import br.edu.utfpr.pb.pw44s.server.model.Address;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
@@ -21,4 +22,5 @@ public class OrderDTO {
     private String shippingType;
     private Long addressId;
     private BigDecimal shipping;
+    private OrderStatus orderStatus;
 }

@@ -10,8 +10,7 @@ import br.edu.utfpr.pb.pw44s.server.service.IOrderServiceWrite;
 import org.modelmapper.ModelMapper;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -55,6 +54,20 @@ public class OrderController extends CrudController<Order, OrderDTO, OrderRespon
         OrderResponseDTO responseOrderResponseDTO = modelMapper.map(savedOrderDTO, OrderResponseDTO.class);
 
         return ResponseEntity.ok(responseOrderResponseDTO);
+    }
+
+    @Override
+    @PutMapping("{id}")
+    public ResponseEntity<OrderDTO> update(
+            @PathVariable Long id,
+            @RequestBody OrderDTO entity
+    ) {
+
+        entity.setId(id);
+
+        orderServiceWrite.updateOrder(entity);
+
+        return ResponseEntity.ok(entity);
     }
 
 }

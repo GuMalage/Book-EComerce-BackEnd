@@ -1,5 +1,6 @@
 package br.edu.utfpr.pb.pw44s.server.model;
 
+import br.edu.utfpr.pb.pw44s.server.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,5 +34,8 @@ public class Order {
     private BigDecimal shipping;
 
     private Long addressId;
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
 
 }

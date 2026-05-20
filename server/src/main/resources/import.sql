@@ -1,6 +1,6 @@
 -- User - password: 123
-INSERT INTO tb_user(display_name, username, password) VALUES ('Administrador', 'admin','$2a$10$.PVIfB07x.SfMYTcToxL0.yxcLWU0GbS2NUO1W1QAvqMm/TsFhVem');
-INSERT INTO tb_user(display_name, username, password) VALUES ('Teste', 'test','$2a$10$.PVIfB07x.SfMYTcToxL0.yxcLWU0GbS2NUO1W1QAvqMm/TsFhVem');
+INSERT INTO tb_user(display_name, username, password, email) VALUES ('Administrador', 'admin','$2a$10$.PVIfB07x.SfMYTcToxL0.yxcLWU0GbS2NUO1W1QAvqMm/TsFhVem', 'gmalage@alunos.utfpr.edu.br');
+INSERT INTO tb_user(display_name, username, password, email) VALUES ('Teste', 'test','$2a$10$.PVIfB07x.SfMYTcToxL0.yxcLWU0GbS2NUO1W1QAvqMm/TsFhVem', 'gmalage@alunos.utfpr.edu.br');
 
 insert into tb_category (name) values ('Fantasia');
 insert into tb_category (name) values ('Ficção Cientifica');
