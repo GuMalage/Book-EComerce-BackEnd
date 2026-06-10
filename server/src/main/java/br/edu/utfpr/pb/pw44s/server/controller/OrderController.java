@@ -8,11 +8,15 @@ import br.edu.utfpr.pb.pw44s.server.service.ICrudServiceWrite;
 import br.edu.utfpr.pb.pw44s.server.service.IOrderServiceRead;
 import br.edu.utfpr.pb.pw44s.server.service.IOrderServiceWrite;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping("order")
@@ -27,6 +31,9 @@ public class OrderController extends CrudController<Order, OrderDTO, OrderRespon
         this.orderServiceRead = orderServiceRead;
         this.modelMapper = modelMapper;
     }
+
+    private static final Logger log =
+            LoggerFactory.getLogger(ProductController.class);
 
     @Override
     protected ICrudServiceWrite<Order, Long> getWriteService() {
@@ -48,6 +55,12 @@ public class OrderController extends CrudController<Order, OrderDTO, OrderRespon
         return orderServiceRead.getOrdersByAuthenticatedUser();
     }
 
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<OrderResponseDTO>> getAllOrders() {
+        return orderServiceRead.getAllOrders();
+    }
+
     @Override
     public ResponseEntity<OrderResponseDTO> create(OrderDTO entity) {
         OrderDTO savedOrderDTO = orderServiceWrite.saveCompleteOrder(entity);
@@ -63,6 +76,7 @@ public class OrderController extends CrudController<Order, OrderDTO, OrderRespon
             @RequestBody OrderDTO entity
     ) {
 
+        log.info("Endpoint GET /products foi chamado");
         entity.setId(id);
 
         orderServiceWrite.updateOrder(entity);

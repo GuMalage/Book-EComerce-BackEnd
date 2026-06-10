@@ -25,6 +25,7 @@ public class OrderItem {
     private BigDecimal totalPriceItems;
 
     @ManyToOne
+    @JoinColumn(name = "order_id")
     private Order order;
 
     @ManyToOne

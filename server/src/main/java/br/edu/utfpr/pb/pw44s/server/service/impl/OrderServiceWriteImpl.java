@@ -11,6 +11,7 @@ import br.edu.utfpr.pb.pw44s.server.repository.OrderRepository;
 import br.edu.utfpr.pb.pw44s.server.service.AuthService;
 import br.edu.utfpr.pb.pw44s.server.service.EmailService;
 import br.edu.utfpr.pb.pw44s.server.service.IOrderServiceWrite;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -92,44 +93,37 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
 
 
     @Override
+    @Transactional
     public void updateOrder(OrderDTO entity) {
 
         Order order = orderRepository.findById(entity.getId())
-                .orElseThrow(() ->
-                        new RuntimeException(
-                                "Order não encontrado: " + entity.getId()
-                        )
-                );
+                .orElseThrow(() -> new RuntimeException("Order não encontrado: " + entity.getId()));
+
+        String oldStatus = (order.getOrderStatus() != null) ? order.getOrderStatus().getDescription() : "Não definido";
 
         if (entity.getOrderStatus() != null) {
             order.setOrderStatus(entity.getOrderStatus());
         }
 
-        List<OrderItem> items =
-                orderItemRepository.findByOrder_Id(order.getId());
-
-        BigDecimal totalOrderPrice = BigDecimal.ZERO;
-
-        for (OrderItem item : items) {
-
-            totalOrderPrice = totalOrderPrice.add(
-                    item.getUnitPrice()
-                            .multiply(BigDecimal.valueOf(item.getQuantity()))
-            );
-        }
-
-        order.setTotalPrice(totalOrderPrice);
-
-
         orderRepository.save(order);
 
-        System.out.println(order.getUser().getUsername());
-        emailService.sendOrderStatusEmail(
-                order.getUser().getEmail(),
-                order.getUser().getUsername(),
-                order.getOrderStatus().name(),
-                order.getUser().getEmail()
-        );
+        if (order.getUser() != null) {
+            String username = order.getUser().getUsername();
+            String email = order.getUser().getEmail();
+            String newStatusName = (order.getOrderStatus() != null) ? order.getOrderStatus().getDescription() : "N/A";
+
+            System.out.println("Enviando e-mail para o usuário: " + username);
+
+            emailService.sendOrderStatusEmail(
+                    email,
+                    username,
+                    newStatusName,
+                    oldStatus,
+                    email
+            );
+        } else {
+            System.out.println("Aviso: O pedido ID " + order.getId() + " não possui um usuário vinculado. E-mail não enviado.");
+        }
     }
 
 }

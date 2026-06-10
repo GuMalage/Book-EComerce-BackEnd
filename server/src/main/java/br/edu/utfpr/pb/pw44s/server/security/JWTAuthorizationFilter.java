@@ -57,6 +57,9 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
             // com posse do username é verificado se ele existe na base de dados
             User user = (User) authService.loadUserByUsername(username);
             //caso exista o usuário é autenticado e a requisição continua a ser executada.
+            if (user == null || !user.isActive()) {
+                return null;
+            }
             return new UsernamePasswordAuthenticationToken(
                     user.getUsername(),
                     null,

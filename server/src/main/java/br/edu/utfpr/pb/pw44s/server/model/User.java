@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_user")
@@ -37,9 +38,25 @@ public class User implements UserDetails {
     @NotNull
     private String email;
 
+    @ManyToMany(fetch = FetchType.EAGER,  cascade = {
+            CascadeType.PERSIST,  CascadeType.MERGE,
+            CascadeType.REFRESH, CascadeType.DETACH
+    })
+    @JoinTable(name = "tb_user_authorities",
+            joinColumns =
+            @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns =
+            @JoinColumn(name = "authority_id", referencedColumnName = "id")
+    )
+    private Set<Authority> userAuthorities;
+
+    @NotNull
+    private boolean active;
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return AuthorityUtils.createAuthorityList("ROLE_USER");
+        return userAuthorities;
     }
 
     @Override
@@ -59,6 +76,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return active;
     }
 }

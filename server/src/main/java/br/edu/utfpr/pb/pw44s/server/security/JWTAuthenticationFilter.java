@@ -47,6 +47,13 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             if (request.getInputStream() != null || request.getInputStream().available() > 0) {
                 credentials = new ObjectMapper().readValue(request.getInputStream(), User.class);
                 user = (User) authService.loadUserByUsername(credentials.getUsername());
+
+
+            }
+            if (user != null && !user.isActive()) { // ou user.getActive() dependendo do seu getter
+                throw new org.springframework.security.authentication.DisabledException(
+                        "Esta está inativa! Contate um Administrador."
+                );
             }
             //Caso o usuário seja encontrado, o objeto authenticationManager encarrega-se de autenticá-lo.
             //Como o authenticationManager foi configurado na classe WebSecurity e, foi informado o método

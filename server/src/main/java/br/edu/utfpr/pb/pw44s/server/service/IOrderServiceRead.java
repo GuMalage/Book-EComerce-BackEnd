@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface IOrderServiceRead extends ICrudServiceRead<Order, Long>{
     ResponseEntity<List<OrderResponseDTO>> getOrdersByAuthenticatedUser();
+    ResponseEntity<List<OrderResponseDTO>> getAllOrders();
 }
