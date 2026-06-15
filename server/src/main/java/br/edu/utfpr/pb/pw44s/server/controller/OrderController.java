@@ -7,13 +7,17 @@ import br.edu.utfpr.pb.pw44s.server.service.ICrudServiceRead;
 import br.edu.utfpr.pb.pw44s.server.service.ICrudServiceWrite;
 import br.edu.utfpr.pb.pw44s.server.service.IOrderServiceRead;
 import br.edu.utfpr.pb.pw44s.server.service.IOrderServiceWrite;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -32,7 +36,7 @@ public class OrderController extends CrudController<Order, OrderDTO, OrderRespon
         this.modelMapper = modelMapper;
     }
 
-    private static final Logger log =
+    public static final Logger log =
             LoggerFactory.getLogger(ProductController.class);
 
     @Override
@@ -82,6 +86,16 @@ public class OrderController extends CrudController<Order, OrderDTO, OrderRespon
         orderServiceWrite.updateOrder(entity);
 
         return ResponseEntity.ok(entity);
+    }
+
+    @PutMapping(value = "reciptUpload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    public OrderDTO saveOrderRecipt(@RequestPart("product") @Valid OrderDTO entity, @RequestPart("image") @Valid MultipartFile file) {
+        return orderServiceWrite.updateOrderReceipt(entity, file);
+    }
+
+    @GetMapping(value = "download/{id}")
+    public  void downloadFile(@PathVariable("id") Long id, HttpServletResponse response) {
+        orderServiceRead.downloadFile(id, response);
     }
 
 }

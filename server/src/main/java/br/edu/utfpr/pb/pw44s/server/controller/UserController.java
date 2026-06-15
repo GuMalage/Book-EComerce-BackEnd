@@ -71,7 +71,6 @@ public class UserController {
             @RequestBody UserDTO entity
     ) {
         entity.setId(id);
-        // O service agora devolve o DTO atualizado do banco
         UserDTO updatedUser = userService.updateUserStatus(entity);
         return ResponseEntity.ok(updatedUser);
     }

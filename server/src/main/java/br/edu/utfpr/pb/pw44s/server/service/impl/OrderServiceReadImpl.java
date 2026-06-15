@@ -3,19 +3,27 @@ package br.edu.utfpr.pb.pw44s.server.service.impl;
 import br.edu.utfpr.pb.pw44s.server.dto.UserDTO;
 import br.edu.utfpr.pb.pw44s.server.dto.response.OrderItemResponseDTO;
 import br.edu.utfpr.pb.pw44s.server.dto.response.OrderResponseDTO;
+import br.edu.utfpr.pb.pw44s.server.minio.service.MinioService;
 import br.edu.utfpr.pb.pw44s.server.model.*;
 import br.edu.utfpr.pb.pw44s.server.repository.OrderItemRepository;
 import br.edu.utfpr.pb.pw44s.server.repository.OrderRepository;
-import br.edu.utfpr.pb.pw44s.server.security.dto.UserResponseDTO;
 import br.edu.utfpr.pb.pw44s.server.service.AuthService;
 import br.edu.utfpr.pb.pw44s.server.service.IOrderServiceRead;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.compress.utils.IOUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static br.edu.utfpr.pb.pw44s.server.controller.OrderController.log;
+
 
 @Service
 public class OrderServiceReadImpl extends CrudServiceReadImpl<Order, Long> implements IOrderServiceRead {
@@ -23,12 +31,14 @@ public class OrderServiceReadImpl extends CrudServiceReadImpl<Order, Long> imple
     private final ModelMapper modelMapper;
     private final AuthService authService;
     private final OrderItemRepository orderItemRepository;
+    private final MinioService minioService;
 
-    public OrderServiceReadImpl(OrderRepository orderRepository, ModelMapper modelMapper, AuthService authService, OrderItemRepository orderItemRepository) {
+    public OrderServiceReadImpl(OrderRepository orderRepository, ModelMapper modelMapper, AuthService authService, OrderItemRepository orderItemRepository,MinioService minioService) {
         this.orderRepository = orderRepository;
         this.modelMapper = modelMapper;
         this.authService = authService;
         this.orderItemRepository = orderItemRepository;
+        this.minioService = minioService;
     }
 
     @Override
@@ -107,6 +117,30 @@ public class OrderServiceReadImpl extends CrudServiceReadImpl<Order, Long> imple
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(responseList);
+    }
+
+    @Override
+    public  void downloadFile(Long id, HttpServletResponse response) {
+        InputStream in = null;
+        try {
+            Order order = this.findOne(id);
+            in = minioService.downloadObject("commons", order.getImageName());
+            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(order.getImageName(), "UTF-8"));
+            response.setCharacterEncoding("UTF-8");
+            IOUtils.copy(in, response.getOutputStream());
+        } catch (UnsupportedEncodingException e) {
+
+        } catch (IOException e) {
+
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+
+                }
+            }
+        }
     }
 
 }

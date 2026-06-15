@@ -38,4 +38,6 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
+    private  String imageName;
+    private  String contentType;
 }

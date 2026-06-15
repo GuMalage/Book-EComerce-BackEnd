@@ -1,4 +1,19 @@
+version: "3.9"
+
 services:
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    environment:
+      MINIO_ROOT_USER: "minio@admin"
+      MINIO_ROOT_PASSWORD: "minio@admin"
+    volumes:
+      - ./data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /data --console-address ":9001"
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.14.1
     container_name: elasticsearch
@@ -17,6 +32,8 @@ services:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     ports:
       - "5601:5601"
+    depends_on:
+      - elasticsearch
 
   filebeat:
     build: ./filebeat

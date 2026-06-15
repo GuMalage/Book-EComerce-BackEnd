@@ -76,7 +76,6 @@ public class UserService {
         user.setActive(userDTO.isActive());
         User userSalvo = userRepository.save(user);
 
-        // Retorna o DTO atualizado do banco
         return modelMapper.map(userSalvo, UserDTO.class);
     }
 
@@ -84,7 +83,6 @@ public class UserService {
         User user = userRepository.findById(userDTO.getId())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        // CORREÇÃO DO CAST: Converte de forma segura a coleção do DTO para Set de Authority
         if (userDTO.getUserAuthorities() != null) {
             Set<Authority> authorities = userDTO.getUserAuthorities().stream()
                     .map(authDto -> modelMapper.map(authDto, Authority.class))

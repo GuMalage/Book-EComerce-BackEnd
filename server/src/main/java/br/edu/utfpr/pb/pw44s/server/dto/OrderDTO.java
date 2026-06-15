@@ -23,4 +23,6 @@ public class OrderDTO {
     private Long addressId;
     private BigDecimal shipping;
     private OrderStatus orderStatus;
+    private  String imageName;
+    private  String contentType;
 }

@@ -26,4 +26,6 @@ public class OrderResponseDTO {
     private BigDecimal shipping;
     private String urlImage;
     private OrderStatus orderStatus;
+    private  String imageName;
+    private  String contentType;
 }

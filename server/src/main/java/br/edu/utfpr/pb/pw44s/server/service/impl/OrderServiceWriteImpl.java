@@ -3,6 +3,9 @@ package br.edu.utfpr.pb.pw44s.server.service.impl;
 import br.edu.utfpr.pb.pw44s.server.dto.OrderDTO;
 import br.edu.utfpr.pb.pw44s.server.dto.OrderItemDTO;
 import br.edu.utfpr.pb.pw44s.server.enums.OrderStatus;
+import br.edu.utfpr.pb.pw44s.server.minio.payload.FileResponse;
+import br.edu.utfpr.pb.pw44s.server.minio.service.MinioService;
+import br.edu.utfpr.pb.pw44s.server.minio.util.FileTypeUtils;
 import br.edu.utfpr.pb.pw44s.server.model.Order;
 import br.edu.utfpr.pb.pw44s.server.model.OrderItem;
 import br.edu.utfpr.pb.pw44s.server.model.Product;
@@ -14,12 +17,13 @@ import br.edu.utfpr.pb.pw44s.server.service.IOrderServiceWrite;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
+
+import static br.edu.utfpr.pb.pw44s.server.controller.OrderController.log;
+
 
 @Service
 public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> implements IOrderServiceWrite {
@@ -27,16 +31,18 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
     private final OrderItemRepository orderItemRepository;
     private final ProductServiceReadImpl productServiceRead;
     private final AuthService authService;
+    private  final MinioService minioService;
     @Autowired
     private EmailService emailService;
-    private BigDecimal totalOrderPrice=BigDecimal.ZERO;
 
-    public OrderServiceWriteImpl(OrderRepository orderRepository, OrderItemRepository orderItemRepository, AuthService authService, ProductServiceReadImpl productServiceRead, EmailService emailService) {
+    public OrderServiceWriteImpl(OrderRepository orderRepository, OrderItemRepository orderItemRepository, AuthService authService,
+                                 ProductServiceReadImpl productServiceRead, EmailService emailService, MinioService minioService) {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.productServiceRead = productServiceRead;
         this.authService = authService;
         this.emailService = emailService;
+        this.minioService = minioService;
     }
 
     @Override
@@ -85,6 +91,7 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
 
         order.setTotalPrice(totalOrderPrice);
         order.setOrderStatus(OrderStatus.PROCESSING);
+
         orderRepository.save(order);
 
         entity.setId(order.getId());
@@ -113,7 +120,7 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
             String newStatusName = (order.getOrderStatus() != null) ? order.getOrderStatus().getDescription() : "N/A";
 
             System.out.println("Enviando e-mail para o usuário: " + username);
-
+            log.info("Email Disparado: " + email);
             emailService.sendOrderStatusEmail(
                     email,
                     username,
@@ -124,6 +131,19 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
         } else {
             System.out.println("Aviso: O pedido ID " + order.getId() + " não possui um usuário vinculado. E-mail não enviado.");
         }
+    }
+
+    public OrderDTO updateOrderReceipt(OrderDTO entity, MultipartFile file) {
+        Order order = orderRepository.findById(entity.getId())
+                .orElseThrow(() -> new RuntimeException("Order não encontrado: " + entity.getId()));
+        String fileType = FileTypeUtils.getFileType(file);
+        if (fileType != null) {
+            FileResponse fileResponse = minioService.putObject(file, "commons", fileType);
+            entity.setImageName(fileResponse.getFilename());
+            entity.setContentType(fileResponse.getContentType());
+        }
+        orderRepository.save(order);
+        return entity;
     }
 
 }
