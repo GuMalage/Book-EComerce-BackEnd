@@ -6,16 +6,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
 @Component
-class InstallOpenTelemetryAppender implements InitializingBean {
+class InstallOpenTelemetryAppender  {
 
-    private final OpenTelemetry openTelemetry;
 
-    InstallOpenTelemetryAppender(OpenTelemetry openTelemetry) {
-        this.openTelemetry = openTelemetry;
-    }
-
-    @Override
-    public void afterPropertiesSet() {
-        OpenTelemetryAppender.install(this.openTelemetry);
-    }
 }
