@@ -136,13 +136,20 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
     public OrderDTO updateOrderReceipt(OrderDTO entity, MultipartFile file) {
         Order order = orderRepository.findById(entity.getId())
                 .orElseThrow(() -> new RuntimeException("Order não encontrado: " + entity.getId()));
+
         String fileType = FileTypeUtils.getFileType(file);
-        if (fileType != null) {
+        if (fileType != null && !file.isEmpty()) {
             FileResponse fileResponse = minioService.putObject(file, "commons", fileType);
+
+            order.setImageName(fileResponse.getFilename());
+            order.setContentType(fileResponse.getContentType());
+
             entity.setImageName(fileResponse.getFilename());
             entity.setContentType(fileResponse.getContentType());
         }
+
         orderRepository.save(order);
+
         return entity;
     }
 

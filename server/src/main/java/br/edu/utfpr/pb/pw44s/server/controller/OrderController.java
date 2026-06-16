@@ -89,7 +89,7 @@ public class OrderController extends CrudController<Order, OrderDTO, OrderRespon
     }
 
     @PutMapping(value = "reciptUpload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
-    public OrderDTO saveOrderRecipt(@RequestPart("product") @Valid OrderDTO entity, @RequestPart("image") @Valid MultipartFile file) {
+    public OrderDTO saveOrderRecipt(@RequestPart("order") @Valid OrderDTO entity, @RequestPart("image") @Valid MultipartFile file) {
         return orderServiceWrite.updateOrderReceipt(entity, file);
     }
 
