@@ -28,13 +28,20 @@ public class MinioUtil {
 
     // Upload Files
     @SneakyThrows
-    public void putObject(String bucketName, MultipartFile multipartFile, String filename, String fileType) {
-        InputStream inputStream = new ByteArrayInputStream(multipartFile.getBytes());
-        minioClient.putObject(
-                PutObjectArgs.builder().bucket(bucketName).object(filename).stream(
-                                inputStream, -1, minioConfig.getFileSize())
-                        .contentType(fileType)
-                        .build());
+    public void putObject(String bucketName, MultipartFile multipartFile, String objectName, String contentType) {
+        try {
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(objectName)
+                            // Passamos o InputStream, o tamanho real e o part size (-1 faz o MinIO calcular o part size automaticamente)
+                            .stream(multipartFile.getInputStream(), multipartFile.getSize(), -1)
+                            .contentType(contentType)
+                            .build()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao fazer stream para o MinIO: " + e.getMessage(), e);
+        }
     }
 
     // Get a file object as a stream from the specified bucket

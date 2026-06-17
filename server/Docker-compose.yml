@@ -14,6 +14,21 @@ services:
       - "9001:9001"
     command: server /data --console-address ":9001"
 
+  minio-config:
+    image: minio/mc:latest
+    container_name: minio_config
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      sleep 5;
+      /usr/bin/mc alias set meu_minio http://minio:9000 minio@admin minio@admin;
+      /usr/bin/mc mb meu_minio/commons || true;
+      /usr/bin/mc anonymous set download meu_minio/commons;
+      echo '=== BUCKET COMMONS CONFIGURADO COMO PUBLICO VIA MC ===';
+      exit 0;
+      "
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.14.1
     container_name: elasticsearch

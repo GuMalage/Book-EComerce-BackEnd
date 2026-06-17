@@ -41,6 +41,7 @@ public  class MinioServiceImpl implements MinioService {
                     .contentType(fileType).createdTime(createdTime)
                     .build();
         } catch (Exception e) {
+            e.printStackTrace();
             return  null;
         }
     }

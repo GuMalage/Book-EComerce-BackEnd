@@ -70,12 +70,15 @@ public class WebSecurity {
                         "/swagger-ui.html",
                         "/webjars/**",
                         "/h2-console/**"
+
                 ).permitAll()
 
 
                 //permite que a rota "/users" seja acessada, mesmo sem o usuário estar autenticado desde que o método HTTP da requisição seja POST
                 .requestMatchers(HttpMethod.POST, "/users/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/login/**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/order/reciptUpload").permitAll()
+
                 //permite que a rota "/error" seja acessada por qualquer requisição mesmo o usuário não estando autenticado
                 .requestMatchers("/error/**").permitAll()
                 //permite que a rota "/h2-console" seja acessada por qualquer requisição mesmo o usuário não estando autenticado

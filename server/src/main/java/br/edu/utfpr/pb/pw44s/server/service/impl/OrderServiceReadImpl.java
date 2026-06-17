@@ -120,26 +120,33 @@ public class OrderServiceReadImpl extends CrudServiceReadImpl<Order, Long> imple
     }
 
     @Override
-    public  void downloadFile(Long id, HttpServletResponse response) {
-        InputStream in = null;
-        try {
-            Order order = this.findOne(id);
-            in = minioService.downloadObject("commons", order.getImageName());
-            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(order.getImageName(), "UTF-8"));
+    public void downloadFile(Long id, HttpServletResponse response) {
+        Order order = this.findOne(id);
+
+        if (order == null) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.NOT_FOUND, "Pedido não encontrado"
+            );
+        }
+
+        String imageName = order.getImageName();
+        if (imageName == null || imageName.trim().isEmpty()) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.BAD_REQUEST, "Este pedido não possui imagem ou anexo cadastrado"
+            );
+        }
+
+        try (InputStream in = minioService.downloadObject("commons", imageName)) {
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(imageName, "UTF-8") + "\"");
             response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/octet-stream");
+
             IOUtils.copy(in, response.getOutputStream());
-        } catch (UnsupportedEncodingException e) {
-
-        } catch (IOException e) {
-
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-
-                }
-            }
+            response.flushBuffer();
+        } catch (Exception e) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao baixar arquivo do MinIO", e
+            );
         }
     }
 

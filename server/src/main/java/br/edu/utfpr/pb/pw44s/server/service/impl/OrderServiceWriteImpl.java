@@ -141,6 +141,11 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
         if (fileType != null && !file.isEmpty()) {
             FileResponse fileResponse = minioService.putObject(file, "commons", fileType);
 
+
+            if (fileResponse == null) {
+                throw new RuntimeException("Falha ao salvar o arquivo no servidor MinIO. O retorno foi nulo.");
+            }
+
             order.setImageName(fileResponse.getFilename());
             order.setContentType(fileResponse.getContentType());
 

@@ -88,13 +88,14 @@ public class OrderController extends CrudController<Order, OrderDTO, OrderRespon
         return ResponseEntity.ok(entity);
     }
 
-    @PutMapping(value = "reciptUpload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @PutMapping(value = "reciptUpdate", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public OrderDTO saveOrderRecipt(@RequestPart("order") @Valid OrderDTO entity, @RequestPart("image") @Valid MultipartFile file) {
         return orderServiceWrite.updateOrderReceipt(entity, file);
     }
 
+    @CrossOrigin(origins = "*", exposedHeaders = "Content-Disposition")
     @GetMapping(value = "download/{id}")
-    public  void downloadFile(@PathVariable("id") Long id, HttpServletResponse response) {
+    public void downloadFile(@PathVariable("id") Long id, HttpServletResponse response) {
         orderServiceRead.downloadFile(id, response);
     }
 
