@@ -15,6 +15,7 @@ import br.edu.utfpr.pb.pw44s.server.service.AuthService;
 import br.edu.utfpr.pb.pw44s.server.service.EmailService;
 import br.edu.utfpr.pb.pw44s.server.service.IOrderServiceWrite;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -22,10 +23,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import static br.edu.utfpr.pb.pw44s.server.controller.OrderController.log;
 
 
 @Service
+@Slf4j
 public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> implements IOrderServiceWrite {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
@@ -120,7 +121,8 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
             String newStatusName = (order.getOrderStatus() != null) ? order.getOrderStatus().getDescription() : "N/A";
 
             System.out.println("Enviando e-mail para o usuário: " + username);
-            log.info("Email Disparado: " + email);
+            log.info("Enviando e-mail de atualização de pedido para o usuário: {}", username);
+            log.info("Email Disparado para o endereço: {}", email);
             emailService.sendOrderStatusEmail(
                     email,
                     username,
@@ -138,24 +140,17 @@ public class OrderServiceWriteImpl extends CrudServiceWriteImpl<Order, Long> imp
                 .orElseThrow(() -> new RuntimeException("Order não encontrado: " + entity.getId()));
 
         String fileType = FileTypeUtils.getFileType(file);
-        if (fileType != null && !file.isEmpty()) {
-            FileResponse fileResponse = minioService.putObject(file, "commons", fileType);
 
+        FileResponse fileResponse = minioService.putObject(file, "commons", fileType);
 
-            if (fileResponse == null) {
-                throw new RuntimeException("Falha ao salvar o arquivo no servidor MinIO. O retorno foi nulo.");
-            }
+        order.setImageName(fileResponse.getFilename());
+        order.setContentType(fileResponse.getContentType());
 
-            order.setImageName(fileResponse.getFilename());
-            order.setContentType(fileResponse.getContentType());
-
-            entity.setImageName(fileResponse.getFilename());
-            entity.setContentType(fileResponse.getContentType());
-        }
+        entity.setImageName(fileResponse.getFilename());
+        entity.setContentType(fileResponse.getContentType());
 
         orderRepository.save(order);
 
         return entity;
     }
-
 }

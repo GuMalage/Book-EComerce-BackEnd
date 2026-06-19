@@ -137,9 +137,17 @@ public class OrderServiceReadImpl extends CrudServiceReadImpl<Order, Long> imple
         }
 
         try (InputStream in = minioService.downloadObject("commons", imageName)) {
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(imageName, "UTF-8") + "\"");
+
+            String contentType = order.getContentType();
+            if (contentType == null || contentType.trim().isEmpty()) {
+                contentType = "application/octet-stream"; // fallback seguro se estiver nulo
+            }
+            response.setContentType(contentType);
+
+            String disposition = "inline; filename=\"" + URLEncoder.encode(imageName, "UTF-8") + "\"";
+            response.setHeader("Content-Disposition", disposition);
+
             response.setCharacterEncoding("UTF-8");
-            response.setContentType("application/octet-stream");
 
             IOUtils.copy(in, response.getOutputStream());
             response.flushBuffer();

@@ -21,10 +21,9 @@ services:
       - minio
     entrypoint: >
       /bin/sh -c "
-      sleep 5;
-      /usr/bin/mc alias set meu_minio http://minio:9000 minio@admin minio@admin;
+      until (/usr/bin/mc alias set meu_minio http://minio:9000 minio@admin minio@admin) do echo 'Aguardando MinIO...' && sleep 1; done;
       /usr/bin/mc mb meu_minio/commons || true;
-      /usr/bin/mc anonymous set download meu_minio/commons;
+      /usr/bin/mc anonymous set download meu_minio/commons || true;
       echo '=== BUCKET COMMONS CONFIGURADO COMO PUBLICO VIA MC ===';
       exit 0;
       "
@@ -54,7 +53,7 @@ services:
     build: ./filebeat
     container_name: filebeat
     volumes:
-      - ./logs:/usr/share/filebeat/logs:ro
+      - ./logs:/usr/share/filebeat/logs:rw
     depends_on:
       - elasticsearch
 
