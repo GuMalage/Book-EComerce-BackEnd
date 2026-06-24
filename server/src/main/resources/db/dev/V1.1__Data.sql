@@ -3,7 +3,7 @@ INSERT INTO tb_authority (authority) VALUES ('ROLE_ADMIN');
 INSERT INTO tb_authority (authority) VALUES ('ROLE_USER');
 
 INSERT INTO tb_user(display_name, username, password, email, active) VALUES ('Administrador','admin','$2a$10$.PVIfB07x.SfMYTcToxL0.yxcLWU0GbS2NUO1W1QAvqMm/TsFhVem','gmalage@alunos.utfpr.edu.br',true);
-INSERT INTO tb_user(display_name, username, password, email, active) VALUES ('Administrador','lolo','$2a$10$.PVIfB07x.SfMYTcToxL0.yxcLWU0GbS2NUO1W1QAvqMm/TsFhVem','gmalage@alunos.utfpr.edu.br',true);
+INSERT INTO tb_user(display_name, username, password, email, active) VALUES ('Usuario','user','$2a$10$.PVIfB07x.SfMYTcToxL0.yxcLWU0GbS2NUO1W1QAvqMm/TsFhVem','gmalage@alunos.utfpr.edu.br',true);
 
 INSERT INTO tb_user_authorities (user_id, authority_id)VALUES (1, 1);
 INSERT INTO tb_user_authorities (user_id, authority_id)VALUES (2, 2);
@@ -53,7 +53,6 @@ INSERT INTO tb_product (name, description, price, url_image, autor_name, long_de
 INSERT INTO tb_product (name, description, price, url_image, autor_name, long_description, category_id) VALUES('Ordem de Extermínio','Prequel da série Maze Runner.',52.90,'https://m.media-amazon.com/images/I/61ILpNSiAuL._AC_UF1000,1000_QL80_.jpg','James Dashner','Antes dos eventos de Maze Runner, uma misteriosa explosão solar destrói grande parte da Terra. Mark e Trina lutam para sobreviver enquanto um vírus mortal começa a se espalhar, mostrando as origens do Caos.',2);
 INSERT INTO tb_product (name, description, price, url_image, autor_name, long_description, category_id) VALUES('A Cantiga dos Pássaros e das Serpentes','Prequel de Jogos Vorazes.',37.90,'https://m.media-amazon.com/images/I/61MCf2k-MgS._AC_UF1000,1000_QL80_.jpg','Suzanne Collins','Situado décadas antes de Katniss Everdeen, o livro acompanha Coriolanus Snow aos 18 anos, mentorando uma tributo do Distrito 12 nos primeiros Jogos Vorazes — revelando suas ambições, traumas e o nascimento de sua crueldade.',2);
 INSERT INTO tb_product (name, description, price, url_image, autor_name, long_description, category_id) VALUES('As Crônicas de Nárnia','Clássico da literatura fantástica.',62.90,'https://m.media-amazon.com/images/I/71yJLhQekBL._AC_UF1000,1000_QL80_.jpg','C. S. Lewis','A série acompanha crianças que descobrem Nárnia, um mundo mágico governado pelo grande leão Aslam. Entre batalhas épicas, criaturas místicas e aventuras inesquecíveis, a obra explora coragem, amizade e sacrifício.',1);
-INSERT INTO tb_product (name, description, price, url_image, autor_name, long_description, category_id) VALUES('A Mangueira do Bombeiro','Clássico da fanfic.',69.69,'https://m.media-amazon.com/images/I/81xf2PpubjL._UF350,350_QL50_.jpg','Julian Clearwater','Romance paranormal, com gravidez masculina de dragão. Uma aventura cheia de reviravoltas, mudança de vida, onde uma mulher hetero branca é a vila.',6);
 
 INSERT INTO tb_order (date_order, total_price, user_id, payment_type, shipping_type, shipping, address_id, order_status) VALUES (NOW(),150.00,2,'PIX','SEDEX',15.00,1,'PROCESSING');
-INSERT INTO tb_orderItem (unit_price, quantity, total_price_items, order_id, product_id, url_image) VALUES (135.00,1,135.00,1,1,'https://m.media-amazon.com/images/I/81xf2PpubjL._UF350,350_QL50_.jpg');
+INSERT INTO tb_order_item (unit_price, quantity, total_price_items, order_id, product_id, url_image) VALUES (135.00,1,135.00,1,1,'https://m.media-amazon.com/images/I/71yJLhQekBL._AC_UF1000,1000_QL80_.jpg');
