@@ -53,7 +53,7 @@ services:
     build: ./filebeat
     container_name: filebeat
     volumes:
-      - ./logs:/usr/share/filebeat/logs:rw
+      - C:\Users\Aluno\Desktop\web\server\Book-EComerce-BackEnd\logs:/usr/share/filebeat/logs:rw
     depends_on:
       - elasticsearch
 
